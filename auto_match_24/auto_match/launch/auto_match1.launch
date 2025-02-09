@@ -1,0 +1,29 @@
+<!--move2grab-->
+<!--SPARK技术讨论与反馈群：8346256-->
+<launch>
+	<!-- Arguments -->
+	<arg name="slam_methods" default="gmapping" doc="slam type [gmapping, cartographer, hector, karto, frontier_exploration]"/>
+	<arg name="configuration_basename" default="spark_lds_2d.lua"/>
+	<arg name="open_rviz" default="true"/>
+	<arg name="open_keyboard" default="false"/>
+	<arg name="open_guide" default="false"/>
+	<arg name="use_indiv" default="false"/>
+	<arg name="lidar_type_tel" default="ydlidar_g6" doc="lidar type [3iroboticslidar2, ydlidar_g2, ydlidar_g6]"/>
+	<!-- 摄像机类型 -->
+	<arg name="camera_type_tel" default="d435" doc="camera type [astrapro, astra, d435...]"/>
+
+	<!--spark底盘驱动，机器人描述,底盘,相机-->
+	<include file="$(find spark_bringup)/launch/driver_bringup.launch">
+		<arg name="camera_type_tel" value="$(arg camera_type_tel)"/>
+		<arg name="lidar_type_tel" value="$(arg lidar_type_tel)"/>
+	</include>
+
+	<!-- tensorflow物体位置识别 -->
+	<node pkg= "auto_match" name="detect4" type="detect4.py"  output="screen"> 
+		<remap from="image" to="/camera/color/image_raw" if="$(eval arg('camera_type_tel')=='d435')"/>
+		<remap from="image" to="/camera/rgb/image_raw" if="$(eval arg('camera_type_tel')=='astrapro')"/>
+		<remap from="image" to="/camera/rgb/image_raw" if="$(eval arg('camera_type_tel')=='astra')"/>
+	</node>
+
+
+</launch>

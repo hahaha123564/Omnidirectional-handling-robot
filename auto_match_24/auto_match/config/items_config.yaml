@@ -1,0 +1,8 @@
+items:
+  clock: 85
+  bear: 88
+  cann: 46
+objects:
+  objects_a: clock
+  objects_b: bear
+  objects_c: cann
